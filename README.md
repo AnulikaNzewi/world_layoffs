@@ -1,42 +1,78 @@
-# 📄 README – Layoffs Data Cleaning
+# 📊 Layoffs Data Analysis Project
 
 ## 📌 Overview
-This project focuses on cleaning and preparing a dataset containing global layoff data.  
-The raw dataset contains issues like duplicates, inconsistent formatting, null/blank values, and unnecessary columns.  
-The objective is to clean, standardize, and structure the data to make it ready for reliable analysis.
+
+This project focuses on cleaning and analyzing a global tech layoffs dataset. The goal is to transform the raw data into a clean, structured format and extract meaningful insights through SQL-based exploratory analysis.
 
 ---
 
-## 🧼 Key Cleaning Steps
+## Data Cleaning Steps
 
-### 1. Created a Staging Table
-To avoid altering the original dataset, a duplicate table was created. All cleaning steps were performed on this staging table.
+To ensure accuracy and reliability in analysis, the following cleaning steps were performed using SQL:
 
-### 2. Removed Duplicate Records
-Duplicates were identified using relevant columns and removed with a `ROW_NUMBER()` partitioning technique.
+- **Created a Staging Table**: Duplicated the raw data into a staging table (`layoffs_staging`) to preserve the original dataset.
+- **Removed Duplicates**: Used row-numbering to identify and remove duplicate records.
+- **Standardized Text Formats**:
+  - Trimmed extra spaces from company names.
+  - Unified industry names (e.g., all “crypto” variations renamed to “Crypto”).
+  - Cleaned country names (e.g., “United States of America” → “United States”).
+  - Converted text-based dates to proper `DATE` format.
+- **Handled Null & Blank Values**:
+  - Replaced blanks in the `industry` column with `NULL`.
+  - Filled missing industries based on similar entries from the same company.
+  - Removed rows with missing values in both `total_laid_off` and `percentage_laid_off`.
+- **Dropped Unnecessary Columns**: Removed temporary columns used during cleaning (e.g., `row_num`).
 
-### 3. Standardized Data Formats
-- Trimmed extra spaces in company names.
-- Standardized variations of industry names (e.g., `crypto currency`, `cryptocurrency`) to `Crypto`.
-- Unified country name entries (e.g., `"United States."` → `"United States"`).
-- Converted date fields from text to proper `DATE` format.
-
-### 4. Handled Null and Blank Values
-- Replaced blank entries in the `industry` column with `NULL`.
-- Filled missing `industry` values by referencing other non-null entries from the same company.
-- Deleted rows where both `total_laid_off` and `percentage_laid_off` were `NULL`, as they provide no value.
-
-### 5. Dropped Unnecessary Columns
-Temporary columns like `row_num`, used during cleaning, were removed after their purpose was fulfilled.
+✅ **Output**: Cleaned dataset stored as `layoffs_staging2`, ready for analysis.
 
 ---
 
-## ✅ Final Outcome
-The final cleaned dataset is stored in the `layoffs_staging2` table.  
-This table is consistent, deduplicated, and ready for analysis, reporting, or visualization.
+## 🔍 Exploratory Data Analysis (EDA)
+
+SQL queries were used to uncover trends and insights:
+
+###  General Analysis
+
+- Maximum number of people laid off in a single day.
+- Companies that laid off 100% of their workforce and had the most funding.
+- Total layoffs by:
+  - Company
+  - Industry
+  - Country
+
+###  Temporal Trends
+
+- Layoffs by year and month.
+- Rolling total layoffs over time.
+- Date range of the dataset.
+
+###  Yearly Rankings
+
+Using Common Table Expressions (CTEs) and `DENSE_RANK()`:
+
+- **Top 5 Companies with the Most Layoffs per Year**
+- **Top 5 Industries Affected per Year**
+- **Top 5 Countries Affected per Year**
 
 ---
 
-## 📝 Notes
-- The original raw data (`layoffs`) was preserved and not modified.
-- SQL best practices were applied throughout the cleaning process to maintain data integrity.
+##  Dataset Fields
+
+- `company`
+- `industry`
+- `country`
+- `date`
+- `stage`
+- `funds_raised_millions`
+- `total_laid_off`
+- `percentage_laid_off`
+
+---
+
+##  Notes
+
+- The raw data remains untouched for backup and reference.
+- All cleaning and transformations were done using SQL best practices.
+- This project supports further analysis and dashboard visualization in tools like Power BI or Tableau.
+
+---
